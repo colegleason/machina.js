@@ -51,7 +51,7 @@ function getLeaklessArgs( args, startIdx ) {
 		newStateObj._child = getChildFsmInstance( newStateObj._child );
 		child = newStateObj._child && newStateObj._child.instance;
 */
-function getChildFsmInstance( config ) {
+function getChildFsmInstance( config, client ) {
 	if ( !config ) {
 		return;
 	}
@@ -60,17 +60,17 @@ function getChildFsmInstance( config ) {
 		// is this a config object with a factory?
 		if ( config.factory ) {
 			childFsmDefinition = config;
-			childFsmDefinition.instance = childFsmDefinition.factory();
+			childFsmDefinition.instance = childFsmDefinition.factory( client );
 		} else {
 			// assuming this is a machina instance
-			childFsmDefinition.factory = function() {
+			childFsmDefinition.factory = function( client ) {
 				return config;
 			};
 		}
 	} else if ( typeof config === "function" ) {
 		childFsmDefinition.factory = config;
 	}
-	childFsmDefinition.instance = childFsmDefinition.factory();
+	childFsmDefinition.instance = childFsmDefinition.factory( client );
 	return childFsmDefinition;
 }
 
